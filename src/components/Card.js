@@ -1,5 +1,6 @@
 import React, { Componet } from "react";
 import { Col, Card, Dropdown } from "react-bootstrap";
+import HistogramBellCurve from "./HistogramBellCurve.js";
 
 export default class Card extends Component {
   constructor() {
@@ -24,21 +25,21 @@ export default class Card extends Component {
   }
 
   render() {
-    const carVal = this.state.cardValue;
+    const cardVal = this.state.content.cardValue;
     return(
-      <Col breakpoint1={breakpointVal1} breakpoint2={breakpointVal2}>
+      <Col breakpoint1={this.state.breakpoints.bpVal1} breakpoint2={this.state.breakpoints.bpVal2}>
         <Card>
           <Card.Body>
-            <Card.Title className={this.state.cardStyle}>
+            <Card.Title className={this.state.content.cardStyle}>
               {this.state.cardTitle}
             </Card.Title>
             // Check to see how to ensure ternary operato
             // returns right value based on input
             {cardVal ? (
-              <normalDistribution />
+              <HistogramBellCurve />
             ) : (
-              <Card.Text className={this.state.cardText}>
-                {this.state.cardValue}
+              <Card.Text className={this.state.content.cardText}>
+                {cardVal}
               </Card.Text>
             )}
           </Card.Body>

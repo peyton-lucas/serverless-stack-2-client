@@ -2,10 +2,8 @@ import React from "react";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import HistogramBellCurve from "highcharts/modules/histogram-bellcurve";
-import "./sixtyDayWeights.css";
 
 HistogramBellCurve(Highcharts);
-// Make this a bell-curve class that can be used for all three graphs
 // Use setState and props - possibly propTypes - to pass data around
 let data;
 
@@ -51,6 +49,7 @@ const options = {
     yAxis: 1,
     zIndex: -1
   }, {
+    // Attach collectionTime to this title
     name: 'Livestock Data',
     type: 'scatter',
     data: data,
@@ -60,10 +59,21 @@ const options = {
   }]
 }
 
-export default class sixtyDayWeights extends component {
+export default class HistogramBellCurve extends component {
+  constructor() {
+    super(props);
+
+    this.state = {
+      // Shouldn't be an anti-pattern as this is only seed data
+      // for component's internally controlled state...
+      // This won't change once graph is rendered
+      collectionTime: props.collectionTime
+    }
+  }
+
   render() {
     return (
-      <div className="sixtyDayWeights">
+      <div>
         <HighchartsReact highcharts={Highcharts} options={options} />
       </div>
     );
