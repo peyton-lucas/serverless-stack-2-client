@@ -8,12 +8,9 @@ export default class Card extends Component {
     // Use spread operator to apply all children props
     // to component instance when rendered on dashboard
     this.state = {
-      breakpoints: {
-        bp1: null,
-        bp2: null,
-        bpVal1: null,
-        bpVal2: null,
-      },
+      // Assume value is an object (e.g. {md: "3", lg: "6"})
+      // reactjs.org/docs/jsx-in-depth.html#spread-attributes
+      breakpoints: null,
       content: {
         cardTitle: null,
         cardText: null,
@@ -27,7 +24,7 @@ export default class Card extends Component {
   render() {
     const cardVal = this.state.content.cardValue;
     return(
-      <Col breakpoint1={this.state.breakpoints.bpVal1} breakpoint2={this.state.breakpoints.bpVal2}>
+      <Col {...this.props}>
         <Card>
           <Card.Body>
             <Card.Title className={this.state.content.cardStyle}>
