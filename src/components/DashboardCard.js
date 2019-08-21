@@ -1,10 +1,10 @@
-import React, { Componet } from "react";
+import React, { Component } from "react";
 import { Col, Card, Dropdown } from "react-bootstrap";
-import HistogramBellCurve from "./HistogramBellCurve.js";
+import BellCurve from "./BellCurve.js";
 // Make this a stateless component that receives props from dashboard state
 // Background styling is implemented via bg prop (e.g. bg="primary", etc.)
 // Text color is implemented via text prop (e.g. text="white")
-export default class Card extends Component {
+export default class DashboardCard extends Component {
   render() {
     const cardVal = this.props.content.cardValue;
     return(
@@ -17,7 +17,7 @@ export default class Card extends Component {
             // Check to see how to ensure ternary operato
             // returns right value based on input
             {cardVal ? (
-              <HistogramBellCurve />
+              <BellCurve />
             ) : (
               <Card.Text className={this.props.content.cardText}>
                 {cardVal}

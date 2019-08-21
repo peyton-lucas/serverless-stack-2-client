@@ -1,9 +1,9 @@
-import React from "react";
-import Highcharts from "highcharts";
-import HighchartsReact from "highcharts-react-official";
-import HistogramBellCurve from "highcharts/modules/histogram-bellcurve";
+import React, { Component } from "react";
+// import Highcharts from "highcharts";
+// import HighchartsReact from "highcharts-react-official";
+// import HistogramBellCurve from "highcharts/modules/histogram-bellcurve";
 
-HistogramBellCurve(Highcharts);
+// HistogramBellCurve(Highcharts);
 // Use setState and props - possibly propTypes - to pass data around
 let data;
 
@@ -58,23 +58,12 @@ const options = {
     }
   }]
 }
-
-export default class HistogramBellCurve extends component {
-  constructor() {
-    super(props);
-
-    this.state = {
-      // Shouldn't be an anti-pattern as this is only seed data
-      // for component's internally controlled state...
-      // This won't change once graph is rendered
-      collectionTime: props.collectionTime
-    }
-  }
-
+// <HighchartsReact highcharts={Highcharts} options={options} />
+export default class BellCurve extends Component {
   render() {
     return (
       <div>
-        <HighchartsReact highcharts={Highcharts} options={options} />
+        Hello world!
       </div>
     );
   }
