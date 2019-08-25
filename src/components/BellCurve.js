@@ -47,6 +47,7 @@ const options = {
     type: 'bellcurve',
     xAxis: 1,
     yAxis: 1,
+    baseSeries: 1,
     zIndex: -1
   }, {
     // Attach collectionTime to this title
