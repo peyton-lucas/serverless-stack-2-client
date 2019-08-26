@@ -1,0 +1,64 @@
+@import url(https://fonts.googleapis.com/css?family=Montserrat);
+// Variables
+$peppermint: #d8e0d6;
+$sixty: #d85f7f;
+$ninety: #1ACCE0;
+$one-twenty: #895FD8;
+$font-family: Montserrat;
+$font-color: #333333;
+$header-weight: 300;
+$description-weight: 400;
+
+html, body {
+  font-family: 'Montserrat', sans-serif !important;
+}
+
+h1 {
+
+}
+
+h3 {
+
+}
+
+.card {
+
+}
+
+kpi {
+  font-size: 48px;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.kpi-card {
+
+}
+
+kpi-header {
+  font-size: 18px;
+  font-weight: 300;
+  height: 25px;
+  display: inline-block;
+}
+
+kpi-description {
+  color: #757783;
+  letter-spacing: 0.3px;
+  font-weight: 400;
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.kpi-delta {
+  display: inline-block;
+  vertical-align: bottom;
+
+}
+
+.chart-header {
+  font-weight: 400;
+  font-size: 18px;
+  color: #393945;
+}
