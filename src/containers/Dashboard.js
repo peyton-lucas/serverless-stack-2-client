@@ -1,40 +1,43 @@
-import React, { Component } from "react";
-import Container from 'react-bootstrap/Container';
-import Row from "react-bootstrap/Row";
-import { DashboardCard } from '../components/DashboardCard.js';
+import React, { Component } from 'react';
+import { Container, Row, Col, Card, CardDeck } from 'react-bootstrap';
+import { NavBar } from "../components/NavBar";
+import Bellcurve from './Bellcurve';
 
-// New KPIs:
-// Growth rate: percentage-based for current term v. birthrate flock
-// Percentage of contemporary groups that grew at or above target
-
-export default class Visualization extends Component {
+export default class Dashboard extends Component {
   // Initiate constructor function
   constructor(props) {
     super(props);
-    // Use spread operator to apply all children props
-    // to component instance when rendered on dashboard
+
     this.state = {
-      // Assume value is an object (e.g. {md: "3", lg: "6"})
-      // reactjs.org/docs/jsx-in-depth.html#spread-attributes
-      data: [],
-      userId: null,
-      breakpoints: null,
-      content: {
-        cardTitle: null,
-        cardText: null,
-        cardValue: null
+      sixtyDays: {
+        backgroundColor: '#d85f7f'
+      },
+      ninetyDays: {
+        backgroundColor: '#1ACCE0'
+      },
+      oneTwentyDays: {
+        backgroundColor: '#895FD8'
       }
     };
   }
 
   render() {
-    console.log("Hello testing testing 123!");
     return(
-      <div className="Vizualization">
         <Container>
-          Hello world!
+          <Row>
+            <Col>
+              <Bellcurve color={this.state.sixtyDays.backgroundColor} />
+            </Col>
+            <Col>
+              <Bellcurve color={this.state.ninetyDays.backgroundColor} />
+            </Col>
+            <Col>
+              <Bellcurve color={this.state.oneTwentyDays.backgroundColor} />
+            </Col>
+          </Row>
         </Container>
-      </div>
     );
   }
 }
+
+
