@@ -4,7 +4,7 @@ import { Container, Row, Col, Form } from "react-bootstrap";
 import LoaderButton from "../components/LoaderButton";
 import { s3Upload } from "../libs/awsLib";
 // import config from "../config";
-import "./UploadFile.css";
+import "./DataDropzone.css";
 
 export default class UploadFile extends Component {
   constructor(props) {
