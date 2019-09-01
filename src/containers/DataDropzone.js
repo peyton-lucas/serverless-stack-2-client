@@ -1,37 +1,49 @@
 import React, { Component } from "react";
 import { API } from "aws-amplify";
-import { Jumbotron, Spinner } from 'react-bootstrap'
-import Dropzone from "react-dropzone";
-import { s3Upload } from "..libs/awsLib";
-import config from "../config";
-import "./UploadCSV.css";
+import { Container, Row, Col, Form } from "react-bootstrap";
+import LoaderButton from "../components/LoaderButton";
+import { s3Upload } from "../libs/awsLib";
+// import config from "../config";
+import "./UploadFile.css";
 
-export default class UploadCSV extends Component {
+export default class UploadFile extends Component {
   constructor(props) {
     super(props);
 
     this.file = null;
 
     this.state = {
-      isLoading: null
-    }
+      isLoading: null,
+      content: ""
+    };
   }
 
-  postCSV() {
-    // Make sure to change API.endpoint.name = "farms" in src/index.js Line 28
-    return API.post("farms", "/farms");
-    // No need to post body content as none is collected during upload process
+  createCSV(csv) {
+    return API.post("farms", "/farms", {
+      body: csv
+    });
   }
 
-  handleOnDrop = async acceptedFiles =>  {
-    // Handle any errors in uploading CSV files within this function....
-    // console.log(acceptedFiles);
-    this.file = acceptedFiles.target.files[0];
+  validateForm() {
+    return this.state.content.length > 0;
+  }
 
-    acceptedFiles.preventDefault();
+  handleChange = event => {
+    this.setState({
+      [event.target.id]: event.target.value
+    });
+  }
 
-    if (this.file && this.file.size > config.MAX_ATTACHMENT_SIZE) {
-      alert(`Please pick a file smaller than ${config.MAX_ATTACHMENT_SIZE/1000000} MB.`);
+  handleFileChange = event => {
+    this.file = event.target.files[0];
+  }
+
+  handleSubmit = async event => {
+    event.preventDefault();
+
+    if (this.file && this.file.size > MAX_ATTACHMENT_SIZE) {
+      // alert(`Please pick a file smaller than ${config.MAX_ATTACHMENT_SIZE/1000000} MB.`);
+      return;
     }
 
     this.setState({ isLoading: true });
@@ -41,8 +53,9 @@ export default class UploadCSV extends Component {
         ? await s3Upload(this.file)
         : null;
 
-      await this.postCSV({
+      await this.createCSV({
         attachment,
+        content: this.state.content
       });
       this.props.history.push("/");
     } catch (e) {
@@ -53,42 +66,34 @@ export default class UploadCSV extends Component {
 
   render() {
     return (
-      <div>
-        <Jumobtron>
-          <img
-            alt="dna"
-            className="Helix"
-            src="baseline-cloud_upload-24px.svg"
-          />
-          <h1>Click or Drop</h1>
-          <Dropzone
-            onDrop={this.handleOnDrop}
-            minSize={0}
-            maxSize={config.MAX_ATTACHMENT_SIZE}
-            accept="text/csv"
-          >
-            {({ getRootProps, getInputProps, isDragActive, isDragReject, rejectedFiles }) => (
-              const isFileTooLarge = rejectedFiles.length > 0 && rejectedFiles[0].size > config.MAX_ATTACHMENT_SIZE;
-              <div {...getRootProps()}>
-                <input {...getInputProps()} />
-                {!isDragActive && "Click here or drag a file to upload!"}
-                {isDragActive && !isDragReject && "Drop your data here!"}
-                {isDragReject && "Only CSVs are accepted, please use provided template!"}
-                {isFileTooLarge && (
-                  <div>
-                    File is too large
-                  </div>
-                )}
-              </div>
-            )}
-          </Dropzone>
-          <Spinner
-            animated="grow"
-            variant="light"
-          >
-            Uploading...
-          </Spinner>
-        </Jumbotron>
+      <div className="UploadFile">
+        <Container>
+          <Row>
+            <Form onSubmit={this.handleSubmit}>
+              <Form.Group controlId="content">
+                <Form.Control
+                  onChange={this.handleChange}
+                  value={this.state.content}
+                  componentClass="textarea"
+                />
+              </Form.Group>
+              <Form.Group controlId="file">
+                <Form.Label>Attachment</Form.Label>
+                <Form.Control onChange={this.handleFileChange} type="file" />
+              </Form.Group>
+              <LoaderButton
+                block
+                bsStyle="primary"
+                bsSize="large"
+                disabled={!this.validateForm()}
+                type="submit"
+                isLoading={this.state.isLoading}
+                text="Upload Data"
+                loadingText="Uploading data…"
+              />
+            </Form>
+          </Row>
+        </Container>
       </div>
     );
   }
