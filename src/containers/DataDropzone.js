@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import { API } from "aws-amplify";
-import { Container, Row, Col, Form } from "react-bootstrap";
-import LoaderButton from "../components/LoaderButton";
 import { s3Upload } from "../libs/awsLib";
+import Dropzone from "react-dropzone";
 // import config from "../config";
-import "./DataDropzone.css";
+import styles from "./styles.scss";
+import styled from 'styled-components';
 
 export default class UploadFile extends Component {
   constructor(props) {
@@ -13,8 +13,7 @@ export default class UploadFile extends Component {
     this.file = null;
 
     this.state = {
-      isLoading: null,
-      content: ""
+      isLoading: null
     };
   }
 
@@ -24,25 +23,13 @@ export default class UploadFile extends Component {
     });
   }
 
-  validateForm() {
-    return this.state.content.length > 0;
-  }
+  handleOnDrop = async acceptedFiles => {
+    this.file = acceptedFiles.target.files[0];
 
-  handleChange = event => {
-    this.setState({
-      [event.target.id]: event.target.value
-    });
-  }
-
-  handleFileChange = event => {
-    this.file = event.target.files[0];
-  }
-
-  handleSubmit = async event => {
-    event.preventDefault();
+    acceptedFiles.preventDefault();
 
     if (this.file && this.file.size > MAX_ATTACHMENT_SIZE) {
-      // alert(`Please pick a file smaller than ${config.MAX_ATTACHMENT_SIZE/1000000} MB.`);
+      alert(`Please pick a file smaller than ${config.MAX_ATTACHMENT_SIZE/1000000} MB.`);
       return;
     }
 
@@ -53,9 +40,8 @@ export default class UploadFile extends Component {
         ? await s3Upload(this.file)
         : null;
 
-      await this.createCSV({
-        attachment,
-        content: this.state.content
+      this.createCSV({
+        attachment
       });
       this.props.history.push("/");
     } catch (e) {
@@ -65,35 +51,67 @@ export default class UploadFile extends Component {
   }
 
   render() {
+    const getColor = (props) => {
+      if (props.isDragAccept) {
+        return '#00e676';
+      }
+      if (props.isDragReject) {
+        return '#ff1744';
+      }
+      if (props.isDragActive) {
+        return '#2196f3';
+      }
+      return '#eeeeee';
+    }
+
+    const Container = styled.div`
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          padding: 100px;
+          border-width: 2px;
+          border-radius: 2px;
+          border-color: ${props => getColor(props)};
+          border-style: dashed;
+          background-color: #fafafa;
+          color: #bdbdbd;
+          outline: none;
+          transition: border .24s ease-in-out;
+          img: width 150px;
+        `;
+
+    const maxSize = MAX_ATTACHMENT_SIZE;
     return (
-      <div className="UploadFile">
-        <Container>
-          <Row>
-            <Form onSubmit={this.handleSubmit}>
-              <Form.Group controlId="content">
-                <Form.Control
-                  onChange={this.handleChange}
-                  value={this.state.content}
-                  componentClass="textarea"
-                />
-              </Form.Group>
-              <Form.Group controlId="file">
-                <Form.Label>Attachment</Form.Label>
-                <Form.Control onChange={this.handleFileChange} type="file" />
-              </Form.Group>
-              <LoaderButton
-                block
-                bsStyle="primary"
-                bsSize="large"
-                disabled={!this.validateForm()}
-                type="submit"
-                isLoading={this.state.isLoading}
-                text="Upload Data"
-                loadingText="Uploading data…"
-              />
-            </Form>
-          </Row>
-        </Container>
+      <div className="container">
+
+        <Dropzone
+          onDrop={this.handleOnDrop}
+          accept="text/csv"
+          minSize={0}
+          maxSize={maxSize}
+        >
+          {({getRootProps, getInputProps, isDragActive, isDragReject, rejectedFiles}) => {
+            const isFileTooLarge = rejectedFiles.length > 0 && rejectedFiles[0].size > maxSize;
+            return (
+
+              <div className="container">
+                <Container {...getRootProps()}>
+                  <img src="../public/dna-solid.svg" />
+                  <input {...getInputProps()} />
+                  {!isDragActive && 'Click here or drop a file to upload!'}
+                  {isDragActive && !isDragReject && "Drop your data here"}
+                  {isDragReject && "File type not accepted, sorry!"}
+                  {isFileTooLarge && (
+                    <div className="text-danger mt-2">
+                      File is too large.
+                    </div>
+                  )}
+                </Container>
+              </div>
+            )}
+          }
+        </Dropzone>
       </div>
     );
   }
