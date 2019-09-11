@@ -1,11 +1,31 @@
-// Helps by having only one file in which to refer to a list of all the possible
-// actions for app
-REGISTER_REQUEST: 'REGISTER_REQUEST';
-REGISTER_SUCCESS: 'REGISTER_SUCCESS';
-REGISTER_FAILURE: 'REGISTER_FAILURE';
+import axios from 'axios';
+// Action Types
+export const types = {
+  LOGIN: 'LOGIN',
+  LOGOUT: 'LOGOUT',
+  FETCH_DATA: 'FETCH_DATA'
+}
 
-LOGIN_REQUEST: 'LOGIN_REQUEST';
-LOGIN_SUCCESS: 'LOGIN_SUCCESS';
-LOGIN_FAILURE: 'LOGIN_FAILURE';
+//Action Creators
+export function login(email, password) {
+  return {
+    type: LOGIN,
+    user
+  }
+}
 
-LOGOUT: 'LOGOUT';
+export function logout() {
+  return {
+    type: LOGOUT,
+    user
+  }
+}
+// Fetches livestockAnalytics.py outputted JSON obj
+export function fetchData(json) {
+  return async function(dispatch) {
+    const livestockData = axios.get("https://api.myjson.com/bins/19dtxc")
+      .then(({ data }) => {
+        dispatch({ type: FETCH_DATA, livestockData });
+      });
+  };
+}
