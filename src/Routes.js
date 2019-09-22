@@ -10,12 +10,12 @@ import Dashboard from "./containers/Dashboard";
 // import NotFound from "./containers/NotFound";
 // import AppliedRoute from "./components/AppliedRoute";
 // import AuthenticatedRoute from "./components/AuthenticatedRoute";
-// import UnauthenticatedRoute from "./components/UnauthenticatedRoute";
+import UnauthenticatedRoute from "./components/UnauthenticatedRoute";
 
 export default ({ childProps }) =>
   <Switch>
 
-    <Route path="/dashboard" exact component={Dashboard} props={childProps} />
+    <UnauthenticatedRoute path="/dashboard" exact component={Dashboard} props={childProps} />
 
   </Switch>;
 
@@ -27,4 +27,5 @@ export default ({ childProps }) =>
   // <AuthenticatedRoute path="/notes/new" exact component={NewNote} props={childProps} />
   // <AuthenticatedRoute path="/notes/:id" exact component={Notes} props={childProps} />
   // <Route component={NotFound} />
+  // <Route path="/dashboard" exact component={Dashboard} props={childProps} />
   { /* Finally, catch all unmatched routes */ }

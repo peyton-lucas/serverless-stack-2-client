@@ -1,9 +1,11 @@
 import React, { Component, Fragment } from "react";
 import { Auth } from "aws-amplify";
 import { Link, withRouter } from "react-router-dom";
-import { Nav, Navbar, NavItem } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
+import { Nav, Navbar, Container } from "react-bootstrap";
 import Routes from "./Routes";
+import { connect } from "react-redux";
+import { logout } from "./src/store/actions";
 import "./App.css";
 
 class App extends Component {
@@ -12,35 +14,35 @@ class App extends Component {
 
     this.state = {
       isAuthenticated: false,
-      isAuthenticating: false
-      // isAuthenticating: true
+      isAuthenticating: true
     };
   }
 
-  // async componentDidMount() {
-  //   try {
-  //     await Auth.currentSession();
-  //     this.userHasAuthenticated(true);
-  //   }
-  //   catch(e) {
-  //     if (e !== 'No current user') {
-  //       alert(e);
-  //     }
-  //   }
-  //
-  //   this.setState({ isAuthenticating: false });
-  // }
+  async componentDidMount() {
+    try {
+      await Auth.currentSession();
+      this.userHasAuthenticated(true);
+    }
+    catch(e) {
+      if (e !== 'No current user') {
+        alert(e);
+      }
+    }
+
+    this.setState({ isAuthenticating: false });
+  }
 
   userHasAuthenticated = authenticated => {
     this.setState({ isAuthenticated: authenticated });
   }
 
   handleLogout = async event => {
-    // await Auth.signOut();
-    //
-    // this.userHasAuthenticated(false);
-    //
-    // this.props.history.push("/login");
+    // Why is this unresolved var? Imported line 7
+    this.props.logout();
+
+    this.userHasAuthenticated(false);
+
+    this.props.history.push("/login");
   }
 
   render() {
@@ -48,46 +50,49 @@ class App extends Component {
       isAuthenticated: this.state.isAuthenticated,
       userHasAuthenticated: this.userHasAuthenticated
     };
-    console.log("Hello world!");
-    console.log(this.state.isAuthenticating);
+
     return (
       !this.state.isAuthenticating &&
       <div className="App container">
-        PLACEHOLDER TEST
-
+        <Navbar className="bg-light justify-content-between">
+          <Container>
+            <Navbar.Brand>
+              <Link to="/">Studistics</Link>
+            </Navbar.Brand>
+            <Navbar.Toggle />
+            <Navbar.Collapse>
+              <Nav className="justify-content">
+                {this.state.isAuthenticated
+                  ? <Nav.Item onClick={this.handleLogout}>Logout</Nav.Item>
+                  : <Fragment>
+                    {/*<Nav.Item>*/}
+                    {/*    <Link to="/signup">Signup</Link>*/}
+                    {/*</Nav.Item>*/}
+                    <LinkContainer to="/signup">
+                      <Nav.Link>Signup</Nav.Link>
+                    </LinkContainer>
+                    {/*<Nav.Item>*/}
+                    {/*    <Link to="/login">Login</Link>*/}
+                    {/*</Nav.Item>*/}
+                    <LinkContainer to="/login">
+                      <Nav.Link>Login</Nav.Link>
+                    </LinkContainer>
+                  </Fragment>
+                }
+              </Nav>
+            </Navbar.Collapse>
+          </Container>
+        </Navbar>
+        <Routes childProps={childProps} />
       </div>
     );
   }
 }
 
-export default withRouter(App);
+function mapStateToProps(state) {
+  return {
+    user: state.user
+  };
+}
 
-// <Navbar fluid collapseOnSelect>
-//   <Navbar.Header>
-//     <Navbar.Brand>
-//       <Link to="/">Scratch</Link>
-//     </Navbar.Brand>
-//     <Navbar.Toggle />
-//   </Navbar.Header>
-//   <Navbar.Collapse>
-//     <Nav pullRight>
-//       {this.state.isAuthenticated
-//         ? <Fragment>
-//             <LinkContainer to="/settings">
-//               <NavItem>Settings</NavItem>
-//             </LinkContainer>
-//             <NavItem onClick={this.handleLogout}>Logout</NavItem>
-//           </Fragment>
-//         : <Fragment>
-//             <LinkContainer to="/signup">
-//               <NavItem>Signup</NavItem>
-//             </LinkContainer>
-//             <LinkContainer to="/login">
-//               <NavItem>Login</NavItem>
-//             </LinkContainer>
-//           </Fragment>
-//       }
-//     </Nav>
-//   </Navbar.Collapse>
-// </Navbar>
-// <Routes childProps={childProps} />
+export default withRouter(connect(mapStateToProps,{logout})(App));
