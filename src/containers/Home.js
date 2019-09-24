@@ -3,6 +3,7 @@ import { API } from "aws-amplify";
 import { Link } from "react-router-dom";
 import { LinkContainer } from "react-router-bootstrap";
 import "./Home.css";
+import UploadFile from "../components/UploadFile";
 
 export default class Home extends Component {
   constructor(props) {
@@ -50,10 +51,11 @@ export default class Home extends Component {
     );
   }
   // Refactor for the dashboard
-  renderDashboard() {
+  renderUploadFile() {
     return (
       <div className="dashboard">
-        {!this.state.isLoading && this.renderNotesList(this.state.data)}
+        {/*{!this.state.isLoading && this.renderNotesList(this.state.data)}*/}
+        <UploadFile />
       </div>
     );
   }
@@ -61,8 +63,8 @@ export default class Home extends Component {
   render() {
     return (
       <div className="Home">
-        {/*{this.props.isAuthenticated ? this.renderDashboard() : this.renderLander()}*/}
-        {this.renderLander()}
+        {this.props.isAuthenticated ? this.renderUploadFile() : this.renderLander()}
+        {/*{this.renderLander()}*/}
       </div>
     );
   }
